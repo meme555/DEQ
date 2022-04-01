@@ -1,6 +1,7 @@
 get.gene.counts <- function(bamlist,gtffi,pe,extension,genenames){
-  gene.data <- Rsubread::featureCounts(files = bamlist, GTF.featureType="exon",GTF.attrType="gene_id",
-                                         annot.ext=gtffi, isGTFAnnotationFile=TRUE,isPairedEnd = pe,readExtension3 = extension)
+  gene.data <- Rsubread::featureCounts(files = bamlist, GTF.featureType="exon",GTF.attrType="gene_id", 
+                                       annot.ext=gtffi, isGTFAnnotationFile=TRUE,isPairedEnd = pe,readExtension3 = extension,
+                                       strandSpecific = 2) #strand added
   gene.counts <- gene.data$counts
   conversion.table <- as.data.frame(genenames)
   row.names(conversion.table) <- make.names(genenames$gene_id,unique=TRUE)
@@ -60,7 +61,8 @@ count.reads <- function(peak.data,bamfiles,paired.end,extension,sample.names = N
                           Strand = GenomicRanges::strand(peaks.for.counts))
     peak.counts <- Rsubread::featureCounts(bamfiles.filenames, 
                                            annot.ext = peak.df, allowMultiOverlap = TRUE, 
-                                           nthreads = nthreads, minFragLength = 20, isPairedEnd = paired.end, readExtension3 = extension)
+                                           nthreads = nthreads, minFragLength = 20, isPairedEnd = paired.end, readExtension3 = extension,
+                                           strandSpecific = 2) #strand added
     #strandSpecific = stranded, 
     peak.counts <- peak.counts$counts
     if (!is.null(sample.names)) {
