@@ -16,10 +16,11 @@ run.tools <- function(results,peak.counts,meta,tool,input.bams,ip.bams,treated.i
   return(results)
 }
 
-run.deseq2 <- function(cnts,meta){
-  inf.dds <- DESeq2::DESeqDataSetFromMatrix(countData = cnts,colData = meta,design = ~Condition+IP+Condition:IP)
+run.deseq2 <- function(cnts,meta,covariate){
+  covariates <- paste(covariate, collapse="+")
+  inf.dds <- DESeq2::DESeqDataSetFromMatrix(countData = cnts,colData = meta,design = ~covariates+Condition+IP+Condition:IP)
   inf.dds.LRT <- DESeq2::DESeq(inf.dds,betaPrior=FALSE, test="LRT",
-                       full=~Condition+IP+Condition:IP,reduced=~Condition+IP)    
+                       full=~covariates+Condition+IP+Condition:IP,reduced=~covariates+Condition+IP)    
   inf.dds.res <- DESeq2::results(inf.dds.LRT)
   results <- as.data.frame(cbind(inf.dds.res$pvalue,inf.dds.res$padj))
   colnames(results) <- c("deseq2.p","deseq2.padj")
@@ -63,8 +64,9 @@ run.metdiff <- function(cnts,meta){
 }
 
 #for genes l2FC and peak IP l2FC
-run.deseq2.4l2fc <- function(cnts,meta,label){
-  dds <- DESeq2::DESeqDataSetFromMatrix(cnts,meta,formula(~Condition))
+run.deseq2.4l2fc <- function(cnts,meta,label,covariate){
+  covariates <- paste(covariate, collapse="+")
+  dds <- DESeq2::DESeqDataSetFromMatrix(cnts,meta,formula(~covariates+Condition))
   dds$Condition <- factor(dds$Condition, levels=c('control','treatment'))
   gene.col2check <- meta$Condition
   dds$Condition <- droplevels(dds$Condition)
