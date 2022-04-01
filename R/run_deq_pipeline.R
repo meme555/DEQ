@@ -29,7 +29,8 @@
 
 deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
                 peak.files,gtf,paired.end=FALSE,outfi='deq_results.txt',
-                tool='deq',compare.gene=TRUE,readlen=100,fraglen=100,nthreads=1){
+                tool='deq',compare.gene=TRUE,readlen=100,fraglen=100,nthreads=1,
+                covariate=NULL){
   
   if (length(input.bams) != length(ip.bams) | length(treated.input.bams) != length(treated.ip.bams)){
     stop('number of IP bam files must equal number of input bam files')
@@ -57,7 +58,7 @@ deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
   
   #run DESeq2, edgeR, and QNB to predict changes in m6A methylation
   results <- peaks$peaks[,c("annot","main.gene")]
-  results <- run.tools(results,peak.counts,meta.data,tool,input.bams,ip.bams,treated.input.bams,treated.ip.bams) 
+  results <- run.tools(results,peak.counts,meta.data,tool,input.bams,ip.bams,treated.input.bams,treated.ip.bams,covariate) 
   peaks$peak.de <- run.deseq2.4l2fc(peak.counts[,which(meta.data$IP == "IP")],
                                   meta.data[which(meta.data$IP == "IP"),],'peak')
   results$peak.l2fc <- peaks$peak.de$peak.l2fc
@@ -66,7 +67,7 @@ deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
   if (compare.gene){
     peaks$gene.counts <- get.gene.counts(c(input.bams,treated.input.bams),
                                          gtf,paired.end,extension,genenames)
-    peaks$gene.de <- run.deseq2.4l2fc(peaks$gene.counts,meta.data[which(meta.data$IP == "input"),],'gene')
+    peaks$gene.de <- run.deseq2.4l2fc(peaks$gene.counts,meta.data[which(meta.data$IP == "input"),],'gene',covariate)
     results$gene.l2fc <- peaks$gene.de[results$main.gene,]$gene.l2fc
     results$gene.p <- peaks$gene.de[results$main.gene,]$gene.p
     results$gene.padj <- peaks$gene.de[results$main.gene,]$gene.padj
