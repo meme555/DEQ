@@ -1,8 +1,8 @@
-run.tools <- function(results,peak.counts,meta,tool,input.bams,ip.bams,treated.input.bams,treated.ip.bams){
+run.tools <- function(results,peak.counts,meta,tool,input.bams,ip.bams,treated.input.bams,treated.ip.bams,covariate){
   tools <- strsplit(tool,'')[[1]]
   full.results <- TRUE
   if ('d' %in% tools){
-    results <- cbind(results,run.deseq2(peak.counts,meta))
+    results <- cbind(results,run.deseq2(peak.counts,meta,covariate))
   }
   if ('e' %in% tools){
     results <- cbind(results,run.edger(peak.counts,meta))
