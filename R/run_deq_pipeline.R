@@ -28,7 +28,7 @@
 #' @examples 
 
 deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
-                peak.files,gtf,paired.end=FALSE,outfi='deq_results.txt',
+                peak.files,gtf,metafile,paired.end=FALSE,outfi='deq_results.txt',
                 tool='deq',compare.gene=TRUE,readlen=100,fraglen=100,nthreads=1,
                 covariate=NULL){
   
@@ -38,8 +38,7 @@ deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
   n.c <- length(input.bams)
   n.t <- length(treated.input.bams)
   extension <- fraglen-readlen
-  meta.data <- data.frame(Condition=c(rep('control',n.c*2),rep('treatment',n.t*2)),
-                     IP=c(rep('input',n.c),rep('IP',n.c),rep('input',n.t),rep('IP',n.t)))
+  meta.data <- metafile
   
   #load gtf annotations
   txdb <- GenomicFeatures::makeTxDbFromGFF(gtf,format='gtf')
