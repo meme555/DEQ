@@ -30,7 +30,7 @@
 deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
                 peak.files,gtf,metafile,paired.end=FALSE,outfi='deq_results.txt',
                 tool='deq',compare.gene=TRUE,readlen=100,fraglen=100,nthreads=1,
-                covariate=NULL){
+                covariate=NULL, samplenames=sample.name){
   
   if (length(input.bams) != length(ip.bams) | length(treated.input.bams) != length(treated.ip.bams)){
     stop('number of IP bam files must equal number of input bam files')
@@ -52,7 +52,7 @@ deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
   
   #count reads
   all.bams <- c(input.bams,ip.bams,treated.input.bams,treated.ip.bams)
-  peaks <- count.reads(peaks,all.bams,paired.end,extension)
+  peaks <- count.reads(peaks,all.bams,samplenames,paired.end,extension) #samplenames added
   peak.counts <- DESeq2::counts(peaks$peak.counts)
   
   #run DESeq2, edgeR, and QNB to predict changes in m6A methylation
