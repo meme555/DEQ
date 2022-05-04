@@ -52,7 +52,7 @@ deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
   
   #count reads
   all.bams <- c(input.bams,ip.bams,treated.input.bams,treated.ip.bams)
-  peaks <- count.reads(peaks,all.bams,samplenames,paired.end,extension) #samplenames added
+  peaks <- count.reads(peaks,all.bams,paired.end,extension,samplenames) #samplenames added
   peak.counts <- DESeq2::counts(peaks$peak.counts)
   
   #run DESeq2, edgeR, and QNB to predict changes in m6A methylation
