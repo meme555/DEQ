@@ -32,7 +32,7 @@ checkBamFileList <- function (bamfiles, clean.names = TRUE) {
   bamfiles
 }
 
-count.reads <- function(peak.data,bamfiles,paired.end,extension,sample.names = NULL,
+count.reads <- function(peak.data,bamfiles,paired.end,extension,sample.names = sample.name,
                         stranded = 0,nthreads=1){
     message("count reads in peaks...")
     bamfiles.filenames <- bamfiles
