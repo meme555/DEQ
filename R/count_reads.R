@@ -1,7 +1,7 @@
 get.gene.counts <- function(bamlist,gtffi,pe,extension,genenames){
   gene.data <- Rsubread::featureCounts(files = bamlist, GTF.featureType="exon",GTF.attrType="gene_id", 
                                        annot.ext=gtffi, isGTFAnnotationFile=TRUE,isPairedEnd = pe,readExtension3 = extension,
-                                       strandSpecific = 2) #strand added
+                                       strandSpecific = 2, nthreads=30) #strand added
   gene.counts <- gene.data$counts
   conversion.table <- as.data.frame(genenames)
   row.names(conversion.table) <- make.names(genenames$gene_id,unique=TRUE)
@@ -33,7 +33,7 @@ checkBamFileList <- function (bamfiles, clean.names = TRUE) {
 }
 
 count.reads <- function(peak.data,bamfiles,paired.end,extension,sample.names=samplenames,
-                        stranded = 0,nthreads=1){
+                        stranded = 2, nthreads=30){
     message("count reads in peaks...")
     bamfiles.filenames <- bamfiles
     bamfiles <- checkBamFileList(bamfiles)
