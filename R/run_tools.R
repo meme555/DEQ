@@ -21,8 +21,6 @@ run.deseq2 <- function(cnts,meta.data,covariate){
   print(formula)
   inf.dds <- DESeq2::DESeqDataSetFromMatrix(countData = cnts,colData = meta.data, design = formula)
   inf.dds.LRT <- DESeq2::DESeq(inf.dds,betaPrior=FALSE, test="LRT",
-                       full=~covariates+Condition+IP+Condition:IP,reduced=~covariates+Condition+IP)
-  inf.dds.LRT <- DESeq2::DESeq(inf.dds,betaPrior=FALSE, test="LRT",
                        full= formula(paste("~", paste(covariate, collapse="+"), "+Condition+IP+Condition:IP") ),
                        reduced= formula(paste("~", paste(covariate, collapse="+"), "+Condition+IP") ) )
   inf.dds.res <- DESeq2::results(inf.dds.LRT)
