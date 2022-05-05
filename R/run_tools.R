@@ -19,6 +19,7 @@ run.tools <- function(results,peak.counts,meta.data,tool,input.bams,ip.bams,trea
 run.deseq2 <- function(cnts,meta.data,covariate){
   covariates <- paste(covariate, collapse="+")
   print(covariates)
+  colnames(meta.data)
   inf.dds <- DESeq2::DESeqDataSetFromMatrix(countData = cnts,colData = meta.data, design = ~covariates+Condition+IP+Condition:IP)
   inf.dds.LRT <- DESeq2::DESeq(inf.dds,betaPrior=FALSE, test="LRT",
                        full=~covariates+Condition+IP+Condition:IP,reduced=~covariates+Condition+IP)    
