@@ -39,6 +39,7 @@ deq <- function(input.bams,ip.bams,treated.input.bams,treated.ip.bams,
   n.t <- length(treated.input.bams)
   extension <- fraglen-readlen
   meta.data <- metafile
+  colnames(meta.data)
   
   #load gtf annotations
   txdb <- GenomicFeatures::makeTxDbFromGFF(gtf,format='gtf')
